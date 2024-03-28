@@ -3,7 +3,12 @@ const mortalKombatData = require('./data')
 console.clear();
 
 let player;
-const intro = (username) => {
+let againstComputer = false;
+let computer;
+let secondPlayer;
+
+
+const playerSelection = () => {
     console.log(`
 
 Welcome to Mortal Kombat !
@@ -38,15 +43,56 @@ Welcome to Mortal Kombat !
     else if (player.toUpperCase() === 'F') {
         return mortalKombatData[5]
     }
-    else intro();
+    else playerSelection();
     
 }
 const init = () => {
-    player = intro();
-    console.log(`You selected ${player.name}`)
-    console.log(player)
+    console.clear();
+    player = playerSelection();
+    playerStats(player);
+    computer = randomPlayer();
+    computerStats(computer);
 }
 
+/// CHAT GPT USED CONSOLE COLORS ANSI 
+// STATS
+
+const playerStats = (player) => {
+
+    console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
+console.log("\x1b[1mHP:\x1b[33m", player.hp, "\x1b[0m"); 
+console.log("\x1b[1mSpecial Moves:\x1b[0m");
+
+player.specialMoves.forEach((move, index) => {
+    const moveNumber = index + 1;
+    console.log(`${moveNumber}. \x1b[32m${move.name}\x1b[0m, Damage: \x1b[33m${move.damage}\x1b[0m, Success Rate: \x1b[33m${move.successRate}%\x1b[0m`);
+});
+
+
+// CHAT GPT FOR CONSOLE COLORS
+   
+    
+    console.log(`######################################
+    
+    VERSUS:
+    `)
+
+}
+
+const computerStats = (computer) => {
+    console.log(`\x1b[37m${computer.name} HP: \x1b[0m\x1b[31m${computer.hp}\x1b[0m`);
+
+}
+
+const randomPlayer = () => { 
+    let rand = Math.floor(Math.random() * 5);
+    return mortalKombatData[rand]
+}
+
+const missOrHit = (rate) => { 
+    let rand = Math.floor(Math.random() * 100)
+    if()
+}
 
 
 init();
