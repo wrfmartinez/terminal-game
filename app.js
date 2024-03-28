@@ -52,6 +52,9 @@ const init = () => {
     playerStats(player);
     computer = randomPlayer();
     computerStats(computer);
+    missOrHit(computer, player);
+    missOrHit(player, computer);
+    missOrHit(computer, player);
 }
 
 /// CHAT GPT USED CONSOLE COLORS ANSI 
@@ -89,9 +92,25 @@ const randomPlayer = () => {
     return mortalKombatData[rand]
 }
 
-const missOrHit = (rate) => { 
-    let rand = Math.floor(Math.random() * 100)
-    if()
+const missOrHit = (user, user2) => { 
+    let rand = 0;
+    let rand2 = 0;
+    rand = Math.floor(Math.random() * 100)
+    if (rand > user.specialMoves[0].successRate) {
+         rand2 = Math.floor(Math.random() * 10)
+        if (rand2 > 5) {
+            return console.log(`${user.name} missed!`)
+        }
+        else {
+            return console.log(`${user.name} dodged`)
+        }
+
+    }
+    else { 
+        console.log(rand)
+        console.log(user.specialMoves[0].successRate)
+        console.log(`${user.name} hit ${user2.name}`);
+    }
 }
 
 
