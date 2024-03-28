@@ -3,9 +3,8 @@ const mortalKombatData = require('./data')
 console.clear();
 
 let player;
-let againstComputer = false;
 let computer;
-let secondPlayer;
+let turn = true;
 
 
 const playerSelection = () => {
@@ -60,7 +59,9 @@ const init = () => {
 
 const playerStats = (player) => {
 
-    console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
+
+
+console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
 console.log("\x1b[1mHP:\x1b[33m", player.hp, "\x1b[0m"); 
 console.log("\x1b[1mSpecial Moves:\x1b[0m");
 
@@ -93,8 +94,8 @@ const randomPlayer = () => {
 }
 
 
-// MISS OR HIT
-const missOrHit = (user, user2, move) => { 
+// MISS OR HIT.. WORKS
+const missOrHit = (user, user2, move, turn) => { 
     let rand = 0;
     let rand2 = 0;
     rand = Math.floor(Math.random() * 100)
@@ -109,11 +110,19 @@ const missOrHit = (user, user2, move) => {
 
     }
     else { 
-        console.log(`${user.name} hit ${user2.name} with ${move.name}. 
-        ${move.damage} damage done`);
+        if (turn) {
+            player.hp -= move.damage;
+            damage(user, user2, move);
+        }
+        else {
+            computer.hp -= move.damage;
+            damage(user, user2, move);
+        }
+
     }
 }
 
+// WORKS
 const chooseMove = (choice, player) => { 
     if (choice === '1') {
         return player.specialMoves[0]
@@ -125,11 +134,34 @@ const chooseMove = (choice, player) => {
         return player.specialMoves[2]
     }
 }
+/// SOMETHING DOESNT WORK
+const fight = (player) => { 
+    if (turn) {
+        let move = prompt('Choose your move (1) (2) (3)  ');
+        move = chooseMove(move, player);
+        missOrHit(player, computer, move, turn);
+        turn = false;
+    }
+    else
+        computerTurn()
+        turn = true;
+        fight();
+}
 
-const fight = (player) =>{ 
-    let move = prompt('Choose your move (1) (2) (3)  ');
-    move = chooseMove(move, player);
-    missOrHit(player, computer, move);
+const computerTurn = () => { 
+    let randMove = Math.floor(Math.random() * 3)
+    randMove = chooseMove(randMove, computer);
+    missOrHit(computer, player, randMove, !turn);
+
+}
+
+// Damage // Works
+const damage = (user,user2,move)=>{ 
+        console.clear();
+        playerStats(player);
+        computerStats(computer);
+        console.log(`${user.name} hit ${user2.name} with ${move.name}. 
+        ${move.damage} damage done`);
 }
 
 
