@@ -52,9 +52,7 @@ const init = () => {
     playerStats(player);
     computer = randomPlayer();
     computerStats(computer);
-    missOrHit(computer, player);
-    missOrHit(player, computer);
-    missOrHit(computer, player);
+    fight(player);
 }
 
 /// CHAT GPT USED CONSOLE COLORS ANSI 
@@ -82,17 +80,21 @@ player.specialMoves.forEach((move, index) => {
 
 }
 
+//DISPLAY Computer HP
 const computerStats = (computer) => {
     console.log(`\x1b[37m${computer.name} HP: \x1b[0m\x1b[31m${computer.hp}\x1b[0m`);
 
 }
 
+//SELECTS RANDOM PLAYER
 const randomPlayer = () => { 
     let rand = Math.floor(Math.random() * 5);
     return mortalKombatData[rand]
 }
 
-const missOrHit = (user, user2) => { 
+
+// MISS OR HIT
+const missOrHit = (user, user2, move) => { 
     let rand = 0;
     let rand2 = 0;
     rand = Math.floor(Math.random() * 100)
@@ -102,15 +104,32 @@ const missOrHit = (user, user2) => {
             return console.log(`${user.name} missed!`)
         }
         else {
-            return console.log(`${user.name} dodged`)
+            return console.log(`${user2.name} dodged`)
         }
 
     }
     else { 
-        console.log(rand)
-        console.log(user.specialMoves[0].successRate)
-        console.log(`${user.name} hit ${user2.name}`);
+        console.log(`${user.name} hit ${user2.name} with ${move.name}. 
+        ${move.damage} damage done`);
     }
+}
+
+const chooseMove = (choice, player) => { 
+    if (choice === '1') {
+        return player.specialMoves[0]
+    }
+    else if (choice === '2') {
+        return player.specialMoves[1]
+    }
+    else { 
+        return player.specialMoves[2]
+    }
+}
+
+const fight = (player) =>{ 
+    let move = prompt('Choose your move (1) (2) (3)  ');
+    move = chooseMove(move, player);
+    missOrHit(player, computer, move);
 }
 
 
