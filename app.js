@@ -1,5 +1,5 @@
 const prompt = require('prompt-sync')();
-const mortalKombatData = require('./data')
+const mortalKombatData = require('./data');
 console.clear();
 
 let player;
@@ -20,31 +20,31 @@ Welcome to Mortal Kombat !
     E - Johnny Cage
     F - Raiden
 
-`)
-    
+`);
+
     player = prompt('')
     console.clear();
     if (player.toUpperCase() === 'A') {
-        return mortalKombatData[0]
+        return mortalKombatData[0];
+    } else if (player.toUpperCase() === 'B') {
+        return mortalKombatData[1];
+    } else if (player.toUpperCase() === 'C') {
+        return mortalKombatData[2];
+    } else if (player.toUpperCase() === 'D') {
+        return mortalKombatData[3];
+    } else if (player.toUpperCase() === 'E') {
+        return mortalKombatData[4];
+    } else if (player.toUpperCase() === 'F') {
+        return mortalKombatData[5];
+    } else { 
+        playerSelection(); 
     }
-    else if (player.toUpperCase() === 'B') {
-        return mortalKombatData[1]
-    }
-    else if (player.toUpperCase() === 'C') {
-        return mortalKombatData[2]
-    }
-    else if (player.toUpperCase() === 'D') {
-        return mortalKombatData[3]
-    }
-    else if (player.toUpperCase() === 'E') {
-        return mortalKombatData[4]
-    }
-    else if (player.toUpperCase() === 'F') {
-        return mortalKombatData[5]
-    }
-    else playerSelection();
-    
+
+    // Create a deep copy of the selected player object
+    player = JSON.parse(JSON.stringify(mortalKombatData[playerIndex]));
+    return player;
 }
+
 const init = () => {
     console.clear();
     player = playerSelection();
@@ -61,23 +61,23 @@ const playerStats = (player) => {
 
 
 
-console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
-console.log("\x1b[1mHP:\x1b[33m", player.hp, "\x1b[0m"); 
-console.log("\x1b[1mSpecial Moves:\x1b[0m");
+    console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
+    console.log("\x1b[1mHP:\x1b[33m", player.hp, "\x1b[0m");
+    console.log("\x1b[1mSpecial Moves:\x1b[0m");
 
-player.specialMoves.forEach((move, index) => {
-    const moveNumber = index + 1;
-    console.log(`${moveNumber}. \x1b[32m${move.name}\x1b[0m, Damage: \x1b[33m${move.damage}\x1b[0m, Success Rate: \x1b[33m${move.successRate}%\x1b[0m`);
-});
+    player.specialMoves.forEach((move, index) => {
+        const moveNumber = index + 1;
+        console.log(`${moveNumber}. \x1b[32m${move.name}\x1b[0m, Damage: \x1b[33m${move.damage}\x1b[0m, Success Rate: \x1b[33m${move.successRate}%\x1b[0m`);
+    });
 
 
-// CHAT GPT FOR CONSOLE COLORS
-   
-    
+    // CHAT GPT FOR CONSOLE COLORS
+
+
     console.log(`######################################
     
     VERSUS:
-    `)
+    `);
 
 }
 
@@ -88,81 +88,88 @@ const computerStats = (computer) => {
 }
 
 //SELECTS RANDOM PLAYER
-const randomPlayer = () => { 
+const randomPlayer = () => {
     let rand = Math.floor(Math.random() * 5);
-    return mortalKombatData[rand]
+    // Create a deep copy of the random player object
+    return JSON.parse(JSON.stringify(mortalKombatData[rand]));
 }
 
+// Damage // Works
+const damage = (user, user2, move) => {
+    console.clear();
+    playerStats(player);
+    computerStats(computer);
+
+    console.log(`${user.name} used ${move.name}!`);
+    console.log(`${user2.name} took ${move.damage} damage.`);
+}
 
 // MISS OR HIT.. WORKS
-const missOrHit = (user, user2, move, turn) => { 
-    let rand = 0;
-    let rand2 = 0;
-    rand = Math.floor(Math.random() * 100)
+const missOrHit = (user, user2, move, turn) => {
+    let rand = Math.floor(Math.random() * 100);
+    let rand2 = Math.floor(Math.random() * 10);
+
     if (rand > user.specialMoves[0].successRate) {
-         rand2 = Math.floor(Math.random() * 10)
         if (rand2 > 5) {
-            return console.log(`${user.name} missed!`)
+            return console.log(`${user.name} missed!`);
+        } else {
+            return console.log(`${user2.name} dodged`);
         }
-        else {
-            return console.log(`${user2.name} dodged`)
-        }
-
-    }
-    else { 
+    } else {
         if (turn) {
-            player.hp -= move.damage;
+            user2.hp -= move.damage;
+            if (user2.hp <= 0) {
+                console.clear();
+                console.log(`${user.name} wins!`);
+                return;
+            }
+            damage(user, user2, move);
+        } else {
+            user.hp -= move.damage;
+            if (user.hp <= 0) {
+                console.clear();
+                console.log(`${user2.name} wins!`);
+                return;
+            }
             damage(user, user2, move);
         }
-        else {
-            computer.hp -= move.damage;
-            damage(user, user2, move);
-        }
-
     }
 }
 
 // WORKS
-const chooseMove = (choice, player) => { 
+const chooseMove = (choice, player) => {
     if (choice === '1') {
-        return player.specialMoves[0]
+        return player.specialMoves[0];
     }
     else if (choice === '2') {
-        return player.specialMoves[1]
+        return player.specialMoves[1];
     }
-    else { 
-        return player.specialMoves[2]
+    else {
+        return player.specialMoves[2];
     }
-}
-/// SOMETHING DOESNT WORK
-const fight = (player) => { 
-    if (turn) {
-        let move = prompt('Choose your move (1) (2) (3)  ');
-        move = chooseMove(move, player);
-        missOrHit(player, computer, move, turn);
-        turn = false;
-    }
-    else
-        computerTurn()
-        turn = true;
-        fight();
 }
 
-const computerTurn = () => { 
-    let randMove = Math.floor(Math.random() * 3)
-    randMove = chooseMove(randMove, computer);
+const computerTurn = () => {
+    let randMove = Math.floor(Math.random() * 3);
+    randMove = chooseMove(randMove + 1, computer);
+    console.log(`${computer.name} chose ${randMove.name}`);
     missOrHit(computer, player, randMove, !turn);
-
 }
 
-// Damage // Works
-const damage = (user,user2,move)=>{ 
-        console.clear();
-        playerStats(player);
-        computerStats(computer);
-        console.log(`${user.name} hit ${user2.name} with ${move.name}. 
-        ${move.damage} damage done`);
+/// SOMETHING DOESNT WORK
+const fight = (player) => {
+    while (player.hp > 0 && computer.hp > 0) {
+        if (turn) {
+            let move = prompt('Choose your move (1) (2) (3)  ');
+            move = chooseMove(move, player);
+            missOrHit(player, computer, move, turn);
+            turn = false;
+        }
+        else {
+            computerTurn();
+            turn = true;
+        }
+    }
 }
-
 
 init();
