@@ -29,8 +29,7 @@ You are also prompted to choose a move. Based on your special moves list within 
 
 <img src="./assets/fight1.png" width="100%" style="margin-bottom: 8px;">
 
-Hp level will be adjusted accordingly for each player. The terminal will also display the move your opponent used and the damage it cause you. You can reference your opponents hp as well. Repeat this process until a player reachs 0hp or below.  
-<span style="color: #D22B2B; font-weight: bold">Bug Alert:</span> The game will not show when you miss a move but will only show when your opponent misses a move. Will fix this when time allows.
+Hp level will be adjusted accordingly for each player. The terminal will also display the move your opponent used and the damage it cause you. You can reference your opponents hp as well. Repeat this process until a player reachs 0 hp or below.  
 
 <img src="./assets/fight2.png" width="100%" style="margin-bottom: 8px;">  
 
