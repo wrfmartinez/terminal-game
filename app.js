@@ -58,9 +58,6 @@ const init = () => {
 // STATS
 
 const playerStats = (player) => {
-
-
-
     console.log("\x1b[1mPlayer:\x1b[32m", player.name, "\x1b[0m");
     console.log("\x1b[1mHP:\x1b[33m", player.hp, "\x1b[0m");
     console.log("\x1b[1mSpecial Moves:\x1b[0m");
@@ -70,15 +67,11 @@ const playerStats = (player) => {
         console.log(`${moveNumber}. \x1b[32m${move.name}\x1b[0m, Damage: \x1b[33m${move.damage}\x1b[0m, Success Rate: \x1b[33m${move.successRate}%\x1b[0m`);
     });
 
-
     // CHAT GPT FOR CONSOLE COLORS
-
-
     console.log(`######################################
     
     VERSUS:
     `);
-
 }
 
 //DISPLAY Computer HP
@@ -94,7 +87,7 @@ const randomPlayer = () => {
     return JSON.parse(JSON.stringify(mortalKombatData[rand]));
 }
 
-// Damage // Works
+// Damage
 const damage = (user, user2, move) => {
     console.clear();
     playerStats(player);
@@ -104,7 +97,7 @@ const damage = (user, user2, move) => {
     console.log(`${user2.name} took ${move.damage} damage.`);
 }
 
-// MISS OR HIT.. WORKS
+// MISS OR HIT
 const missOrHit = (user, user2, move, turn) => {
     let rand = Math.floor(Math.random() * 100);
     let rand2 = Math.floor(Math.random() * 10);
@@ -136,7 +129,6 @@ const missOrHit = (user, user2, move, turn) => {
     }
 }
 
-// WORKS
 const chooseMove = (choice, player) => {
     if (choice === '1') {
         return player.specialMoves[0];
@@ -150,13 +142,19 @@ const chooseMove = (choice, player) => {
 }
 
 const computerTurn = () => {
-    let randMove = Math.floor(Math.random() * 3);
-    randMove = chooseMove(randMove + 1, computer);
-    console.log(`${computer.name} chose ${randMove.name}`);
+    let randMoveIndex;
+    // Ensure a different move is chosen if used twice in a row
+    do {
+        randMoveIndex = Math.floor(Math.random() * 3);
+    } while (randMoveIndex === computer.lastMoveIndex);
+    computer.lastMoveIndex = randMoveIndex; 
+    let randMove = chooseMove(String(randMoveIndex + 1), computer);
+    console.log(`${computer.name} used ${randMove.name}`);
+    console.log(`${player.name} took ${randMove.damage} damage.`);
+    prompt('.. Pause .. Enter');
     missOrHit(computer, player, randMove, !turn);
 }
 
-/// SOMETHING DOESNT WORK
 const fight = (player) => {
     while (player.hp > 0 && computer.hp > 0) {
         if (turn) {
